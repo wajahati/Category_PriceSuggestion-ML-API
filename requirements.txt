@@ -4,7 +4,6 @@ uvicorn
 gunicorn==19.9.0
 pydantic
 keras
-tensorflow
 openai
 uvloop
 httptools
