@@ -3,7 +3,6 @@ fastapi
 uvicorn
 gunicorn==19.9.0
 pydantic
-nltk
 keras
 tensorflow
 openai
