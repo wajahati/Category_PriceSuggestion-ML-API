@@ -29,6 +29,8 @@ import operator
 # import openai
 # import re
 
+import os
+port = int(os.environ.get('PORT', 8000))
 # 2. Create the app object
 app = FastAPI()
 
@@ -472,4 +474,4 @@ def predictCategory(data:Category):
 # 5. Run the API with uvicorn
 #    Will run on http://127.0.0.1:8000
 if __name__ == '__main__':
-    uvicorn.run(app, host='127.0.0.1', port=8000)
+    uvicorn.run(app, host='0.0.0.0', port=port)
