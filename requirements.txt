@@ -7,7 +7,6 @@ nltk
 keras
 tensorflow
 openai
-pickle
 operator
 uvloop
 httptools
