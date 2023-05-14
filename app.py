@@ -418,7 +418,7 @@ def findCategory(name,description):
 
 # def suggest(title,description):
     
-#     openai.api_key = "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"
+#     openai.api_key = "sk-"
 #     prompt = f"Based on the following product information in Pakistan in pakistani rupees, suggest a price range :\n\nTitle: {title}\nDescription: {description}\n\nSuggested Price:"
 #     response = openai.Completion.create(
 #         engine="text-davinci-002",
