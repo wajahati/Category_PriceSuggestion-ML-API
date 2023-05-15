@@ -1,8 +1,11 @@
-keras_preprocessing
+nltk
+Keras-Preprocessing
+tensorflow-cpu
+openai
 fastapi
 uvicorn
 gunicorn==19.9.0
 pydantic
-keras
+pickle5
 uvloop
 httptools
