@@ -13,24 +13,14 @@ from Categories import Category
 from Categories import Price
 
 import pickle
-
-
-## CAtegory Prediction Imports
-# Import necessary libraries required at the production side
-
 from keras_preprocessing.sequence import pad_sequences
-# keras.utils
 from nltk.corpus import stopwords
 from nltk.stem.snowball import SnowballStemmer
 import re
 from keras.models import load_model
 import operator
 
-# import openai
-# import re
-
-import os
-port = int(os.environ.get('PORT', 8000))
+import openai
 # 2. Create the app object
 app = FastAPI()
 
@@ -414,35 +404,32 @@ def findCategory(name,description):
   # return dict(filter(lambda elem: elem[1] > 0.5, D.items()))
   data_array = [{'category': k} for k, v in D.items()]
   return data_array
+def suggest(title,description):
+    openai.api_key = "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"
+    prompt = f"Based on the following product information in Pakistan in pakistani rupees, suggest a price range :\n\nTitle: {title}\nDescription: {description}\n\nSuggested Price:"
+    response = openai.Completion.create(
+        engine="text-davinci-002",
+        prompt=prompt,
+        max_tokens=64,
+        n=1,
+        stop=None,
+        temperature=0.5,
+        )
 
+    response_text = response.choices[0].text.strip()
+    print(response_text)
+    # Define a regular expression pattern to match the price range
+    price_pattern = r"^(PKR|(Rs\.) )?\d{1,3}(,\d{3})*(\.\d+)?\s*-\s*(Rs\. )?\d{1,3}(,\d{3})*(\.\d+)?$"
 
-# def suggest(title,description):
-    
-#     openai.api_key = "sk-"
-#     prompt = f"Based on the following product information in Pakistan in pakistani rupees, suggest a price range :\n\nTitle: {title}\nDescription: {description}\n\nSuggested Price:"
-#     response = openai.Completion.create(
-#         engine="text-davinci-002",
-#         prompt=prompt,
-#         max_tokens=64,
-#         n=1,
-#         stop=None,
-#         temperature=0.5,
-#         )
+    # Search the response text for the price pattern
+    match = re.search(price_pattern, response_text)
 
-#     response_text = response.choices[0].text.strip()
-#     print(response_text)
-#     # Define a regular expression pattern to match the price range
-#     price_pattern = r"^(PKR|(Rs\.) )?\d{1,3}(,\d{3})*(\.\d+)?\s*-\s*(Rs\. )?\d{1,3}(,\d{3})*(\.\d+)?$"
-    
-#     # Search the response text for the price pattern
-#     match = re.search(price_pattern, response_text)
-    
-#     # If a match is found, extract the price range
-#     if match:
-#         price_range = match.group()
-#         return price_range
-#     else:
-#         return("Could not find price range in response")
+    # If a match is found, extract the price range
+    if match:
+        price_range = match.group()
+        return price_range
+    else:
+        return("Could not find price range")
     
 
 # # 3. Index route, opens automatically on http://127.0.0.1:8000
@@ -451,15 +438,15 @@ def findCategory(name,description):
 #     return {'message': 'Hello, World'}
     
 
-# @app.post('/suggestPrice')
-# def suggestPrice(data:Price):
-#     data = data.dict()
-#     title=data['title']
-#     description=data['description']
+@app.post('/suggestPrice')
+def suggestPrice(data:Price):
+    data = data.dict()
+    title=data['title']
+    description=data['description']
     
-#     suggested = suggest(title,description)
-#     data = {"suggestedprice": suggested}
-#     return JSONResponse(content=data)
+    
+    data = {"suggestedprice": suggest(title,description)}
+    return JSONResponse(content=data)
 
 @app.post('/predictCategory')
 def predictCategory(data:Category):
@@ -474,4 +461,4 @@ def predictCategory(data:Category):
 # 5. Run the API with uvicorn
 #    Will run on http://127.0.0.1:8000
 if __name__ == '__main__':
-    uvicorn.run(app, host='0.0.0.0', port=port)
+    uvicorn.run(app, host='127.0.0.1', port=8000)
