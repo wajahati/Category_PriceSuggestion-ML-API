@@ -405,7 +405,7 @@ def findCategory(name,description):
   data_array = [{'category': k} for k, v in D.items()]
   return data_array
 def suggest(title,description):
-    openai.api_key = "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"
+    openai.api_key = "API-KEY(openAI)"
     prompt = f"Based on the following product information in Pakistan in pakistani rupees, suggest a price range :\n\nTitle: {title}\nDescription: {description}\n\nSuggested Price:"
     response = openai.Completion.create(
         engine="text-davinci-002",
